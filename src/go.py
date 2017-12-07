@@ -1,18 +1,36 @@
-import glob
-import csv
-import sqlite3
-import os
-import os.path
-import unicodecsv
-
-from collections import OrderedDict
 # ---------------------------------------------------------------------------
 # Parse OS Open Data "Open Names CSV" file into Postcodes and Streets
 # tab files.  These are then processed into sqlite DB files which can be used
 # for address based lookups etc.
 # ---------------------------------------------------------------------------
-def writedbfile(dbfilename, inputfile, createstatement, insertstatement, removefile):
-    ''' writes out the parsed files into sqlite db structure '''
+import csv
+import sqlite3
+import os
+import os.path
+import unicodecsv
+from collections import OrderedDict
+
+
+def writedbfile(
+        dbfilename, inputfile,
+        createstatement, insertstatement,
+        removefile):
+    '''
+    Writes a new .db file given a TAB input file, create and insert statement
+    and a flag to remove any existing .db file.
+    ...
+    Attributes:
+    dbfilename: string
+        The resulting db file being created.
+    inputfile: string
+        The TAB file to process
+    createstatement: string
+        Teh SQL create table statement
+    insertstatement: string
+        The SQL insert record statement
+    removefile: Bool
+        Flag to determine if we remove pre existing db file.
+    '''
     print " - Processing DB write %s" % (inputfile)
     if removefile and os.path.isfile(dbfilename):
         print "  - Removing DB file"
@@ -28,8 +46,15 @@ def writedbfile(dbfilename, inputfile, createstatement, insertstatement, removef
     con.commit()
     print "  - Finished"
 
+
 def loadfile(file):
-    ''' Reads in csv file and processes it's content '''
+    '''
+    Reads in csv file and processes it's content
+    ...
+    Attributes:
+    file: string
+        The OS Open Name CSV files.
+    '''
     # Stack for storing the typing.
     stack = {"types": {}}
     count = 0
@@ -72,7 +97,9 @@ def loadfile(file):
         #     print "  - %s: %d items" % (i, stack['types'][i])
 
 
-# Base.
+#
+# Processing.
+#
 doProcess = False
 if doProcess:
     i = 0
